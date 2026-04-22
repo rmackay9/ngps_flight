@@ -212,6 +212,45 @@ docker rm vps-dev
 
 ---
 
+## Running the System
+
+### Start the container
+
+```bash
+docker start vps-dev
+```
+
+### Launch the simulation
+
+In one terminal:
+
+```bash
+docker exec -u dev -e DISPLAY=$DISPLAY vps-dev bash -lc '
+  source /opt/ros/humble/setup.bash
+  source ~/ngps_ws/install/setup.bash
+  export GZ_VERSION=harmonic
+  ros2 launch ardupilot_gz_bringup iris_runway.launch.py
+'
+```
+
+Gazebo Sim should appear with the runway world
+
+RViz2 should appear with the IRIS multcopter visible
+
+### Connect MAVProxy (optional)
+
+Once the simulation is running, open a second terminal to start an interactive MAVProxy:
+
+```bash
+docker exec -it -u dev vps-dev bash -lc '
+  mavproxy.py --master=udp:127.0.0.1:14550 --console --map
+'
+```
+
+The MAVProxy GCS terminal, console and map should appear
+
+---
+
 ### Package-level setup
 
 See individual package READMEs:
